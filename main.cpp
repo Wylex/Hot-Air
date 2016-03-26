@@ -1,4 +1,5 @@
 #include "Ballon.h"
+#include <iostream>
 
 int main() {
 	const int xSize = 480;
@@ -18,37 +19,35 @@ int main() {
 				window.close();
 			//Key pressed
 			if(event.type == sf::Event::KeyPressed) {
-				if(event.key.code == sf::Keyboard::Left) {
-					ballon.horiAcceleration(false);
+				if(event.key.code == sf::Keyboard::Left)
 					ballon.isMoving(true, true);
-				}
-				if(event.key.code == sf::Keyboard::Right) {
-					ballon.horiAcceleration(true);
+				if(event.key.code == sf::Keyboard::Right)
 					ballon.isMoving(true, true);
-				}
-				if(event.key.code == sf::Keyboard::Up) {
-					ballon.vertAcceleration(false);
+				if(event.key.code == sf::Keyboard::Up)
 					ballon.isMoving(true, false);
-				}
-				if(event.key.code == sf::Keyboard::Down) {
-					ballon.vertAcceleration(true);
+				if(event.key.code == sf::Keyboard::Down)
 					ballon.isMoving(true, false);
-				}
 			}
+
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+				ballon.horiAcceleration(false);
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+				ballon.horiAcceleration(true);
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+				ballon.vertAcceleration(false);
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+				ballon.vertAcceleration(true);
+
 			//Key released
 			if(event.type == sf::Event::KeyReleased) {
-				if(event.key.code == sf::Keyboard::Left) {
+				if(event.key.code == sf::Keyboard::Left)
 					ballon.isMoving(false, true);
-				}
-				if(event.key.code == sf::Keyboard::Right) {
+				if(event.key.code == sf::Keyboard::Right)
 					ballon.isMoving(false, true);
-				}
-				if(event.key.code == sf::Keyboard::Up) {
+				if(event.key.code == sf::Keyboard::Up)
 					ballon.isMoving(false, false);
-				}
-				if(event.key.code == sf::Keyboard::Down) {
+				if(event.key.code == sf::Keyboard::Down)
 					ballon.isMoving(false, false);
-				}
 			}
 		}
 
