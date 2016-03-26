@@ -5,24 +5,27 @@
 
 class Ballon: public sf::Drawable {
 	private:
+		const int xSize;
+		const int ySize;
+
 		sf::Texture ballonTexture;
 		sf::Sprite ballon;
 		int xAcceleration;
 		int yAcceleration;
-		bool movement = false;
+		bool xMovement = false;
+		bool yMovement = false;
 		sf::Clock updateClock;
 		sf::Clock slowDownClock;
 
-		const int xSize;
-		const int ySize;
-
 	public:
 		Ballon(int xSize, int ySize);
-		void update();
+
 		void horiAcceleration(bool increase);
 		void vertAcceleration(bool increase);
+
+		void update();
+		void isMoving(bool mvm, bool x);
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		void isMoving(bool mvm);
 };
 
 #endif

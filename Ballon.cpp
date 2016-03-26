@@ -8,9 +8,6 @@ Ballon::Ballon(int x, int y): xSize(x), ySize(y) {
 	xAcceleration = 0;
 	yAcceleration = 0;
 
-	updateClock.restart();
-	slowDownClock.restart();
-
 	ballon.setPosition(xSize/2 - ballon.getLocalBounds().width/2, 100);
 }
 
@@ -27,6 +24,19 @@ void Ballon::horiAcceleration(bool increase) {
 			xAcceleration -= 2;
 }
 
+void Ballon::vertAcceleration(bool increase) {
+	if(increase and yAcceleration < 30)
+		if(yAcceleration == 0)
+			yAcceleration = 8;
+		else
+			yAcceleration += 2;
+	else if(yAcceleration > -30)
+		if(yAcceleration == 0)
+			yAcceleration = -8;
+		else
+			yAcceleration -= 2;
+}
+
 void Ballon::update() {
 	//Mover globo
 	if(updateClock.getElapsedTime().asMilliseconds() > 20) {
@@ -39,31 +49,41 @@ void Ballon::update() {
 			ballon.setPosition(position);
 			xAcceleration = 0;
 		}
+		if(ballon.getGlobalBounds().top -5 < 0 or ballon.getGlobalBounds().top + ballon.getGlobalBounds().height + 5 > ySize) {
+			ballon.setPosition(position);
+			yAcceleration = 0;
+		}
 	}
 
 	if(xAcceleration == 0 and yAcceleration == 0) //No iniciar cronómetro hasta que aumente la velocidad algo
 		slowDownClock.restart();
 
 	//Disminución progresiva de la aceleración
-	if(slowDownClock.getElapsedTime().asMilliseconds() > 200 and !movement) {
-		slowDownClock.restart();
+	if(slowDownClock.getElapsedTime().asMilliseconds() > 150) {
+		if(!xMovement) {
+			slowDownClock.restart();
 
-		if(xAcceleration > 0)
-			xAcceleration -= 2;
-		else if(xAcceleration < 0)
-			xAcceleration += 2;
+			if(xAcceleration > 0)
+				xAcceleration -= 2;
+			else if(xAcceleration < 0)
+				xAcceleration += 2;
+		}
+		if(!yMovement) {
+			slowDownClock.restart();
 
-		if(yAcceleration > 0)
-			yAcceleration -= 2;
-		else if(yAcceleration < 0)
-			yAcceleration += 2;
+			if(yAcceleration > 0)
+				yAcceleration -= 2;
+			else if(yAcceleration < 0)
+				yAcceleration += 2;
+		}
 	}
-
-	std::cout << "xAcceleration = " << xAcceleration << std::endl;
 }
 
-void Ballon::isMoving(bool mvm) {
-	movement = mvm;
+void Ballon::isMoving(bool mvm, bool x) {
+	if(x)
+		xMovement = mvm;
+	else
+		yMovement = mvm;
 }
 
 void Ballon::draw(sf::RenderTarget& target, sf::RenderStates states) const {
