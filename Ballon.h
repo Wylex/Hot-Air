@@ -10,6 +10,9 @@ class Ballon: public sf::Drawable {
 
 		sf::Texture ballonTexture;
 		sf::Sprite ballon;
+		sf::Texture ballonTextureReflec;
+		sf::Sprite ballonReflec;
+
 		int xAcceleration;
 		int yAcceleration;
 		bool xMovement = false;

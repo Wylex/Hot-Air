@@ -17,12 +17,12 @@ int main() {
 			if (event.type == sf::Event::Closed)
 				window.close();
 			//Key pressed
-			else if(event.type == sf::Event::KeyPressed) {
+			if(event.type == sf::Event::KeyPressed) {
 				if(event.key.code == sf::Keyboard::Left) {
 					ballon.horiAcceleration(false);
 					ballon.isMoving(true, true);
 				}
-				else if(event.key.code == sf::Keyboard::Right) {
+				if(event.key.code == sf::Keyboard::Right) {
 					ballon.horiAcceleration(true);
 					ballon.isMoving(true, true);
 				}
@@ -30,23 +30,23 @@ int main() {
 					ballon.vertAcceleration(false);
 					ballon.isMoving(true, false);
 				}
-				else if(event.key.code == sf::Keyboard::Down) {
+				if(event.key.code == sf::Keyboard::Down) {
 					ballon.vertAcceleration(true);
 					ballon.isMoving(true, false);
 				}
 			}
 			//Key released
-			else if(event.type == sf::Event::KeyReleased) {
+			if(event.type == sf::Event::KeyReleased) {
 				if(event.key.code == sf::Keyboard::Left) {
 					ballon.isMoving(false, true);
 				}
-				else if(event.key.code == sf::Keyboard::Right) {
+				if(event.key.code == sf::Keyboard::Right) {
 					ballon.isMoving(false, true);
 				}
 				if(event.key.code == sf::Keyboard::Up) {
 					ballon.isMoving(false, false);
 				}
-				else if(event.key.code == sf::Keyboard::Down) {
+				if(event.key.code == sf::Keyboard::Down) {
 					ballon.isMoving(false, false);
 				}
 			}

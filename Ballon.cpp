@@ -4,6 +4,8 @@
 Ballon::Ballon(int x, int y): xSize(x), ySize(y) {
 	ballonTexture.loadFromFile("Imgs/ballon.png");
 	ballon.setTexture(ballonTexture);
+	ballonTextureReflec.loadFromFile("Imgs/ballon_reflec.png");
+	ballonReflec.setTexture(ballonTextureReflec);
 
 	xAcceleration = 0;
 	yAcceleration = 0;
@@ -39,7 +41,7 @@ void Ballon::vertAcceleration(bool increase) {
 
 void Ballon::update() {
 	//Mover globo
-	if(updateClock.getElapsedTime().asMilliseconds() > 20) {
+	if(updateClock.getElapsedTime().asMilliseconds() > 40) {
 		updateClock.restart(); //Reiniciar tiempo
 
 		sf::Vector2f position = ballon.getPosition();
@@ -49,7 +51,7 @@ void Ballon::update() {
 			ballon.setPosition(position);
 			xAcceleration = 0;
 		}
-		if(ballon.getGlobalBounds().top -5 < 0 or ballon.getGlobalBounds().top + ballon.getGlobalBounds().height + 5 > ySize) {
+		if(ballon.getGlobalBounds().top -5 < 0 or ballon.getGlobalBounds().top + ballon.getGlobalBounds().height + 5 > (ySize/2) + 40) {
 			ballon.setPosition(position);
 			yAcceleration = 0;
 		}
@@ -59,7 +61,7 @@ void Ballon::update() {
 		slowDownClock.restart();
 
 	//Disminución progresiva de la aceleración
-	if(slowDownClock.getElapsedTime().asMilliseconds() > 150) {
+	if(slowDownClock.getElapsedTime().asMilliseconds() > 120) {
 		if(!xMovement) {
 			slowDownClock.restart();
 
@@ -77,6 +79,9 @@ void Ballon::update() {
 				yAcceleration += 2;
 		}
 	}
+
+
+	ballonReflec.setPosition(ballon.getPosition().x, ((ySize/2) + 40) + ((ySize/2) + 40) - (ballon.getGlobalBounds().top + ballon.getLocalBounds().height));
 }
 
 void Ballon::isMoving(bool mvm, bool x) {
@@ -88,4 +93,5 @@ void Ballon::isMoving(bool mvm, bool x) {
 
 void Ballon::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(ballon, states);
+	target.draw(ballonReflec, states);
 }
