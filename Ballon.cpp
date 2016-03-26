@@ -95,9 +95,11 @@ void Ballon::update() {
 		}
 	}
 
-	std::cout << xAcceleration << std::endl;
-
 	ballonReflec.setPosition(ballon.getPosition().x, ((ySize/2) + 40) + ((ySize/2) + 40) - (ballon.getGlobalBounds().top + ballon.getLocalBounds().height));
+	sf::Color ballonRefColor = ballonReflec.getColor();
+	ballonRefColor.a = 210 - (ballonReflec.getGlobalBounds().top - ((ySize/2) + 40));
+	ballonReflec.setColor(ballonRefColor);
+
 }
 
 void Ballon::isMoving(bool mvm, bool x) {
