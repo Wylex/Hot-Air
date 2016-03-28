@@ -1,6 +1,5 @@
 #include "Ballon.h"
 #include <cmath>
-#include <iostream>
 
 Ballon::Ballon(int x, int y): xSize(x), ySize(y) {
 	ballonTexture.loadFromFile("Imgs/ballon.png");

@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 Bird::Bird(int xSize, int ySize, bool left) {
-	birdText.loadFromFile("Img/bird.png");
+	birdText.loadFromFile("Imgs/bird1.png");
 	bird.setTexture(birdText);
 
 	std::srand(time(NULL));
