@@ -3,17 +3,21 @@
 #include <cstdlib>
 
 Bird::Bird(int xSize, int ySize, bool left) {
-	birdText.loadFromFile("Imgs/bird1.png");
-	bird.setTexture(birdText);
 
 	std::srand(time(NULL));
 
 	int yPosition = std::rand()%int(ySize - bird.getGlobalBounds().height);
 
-	if(left)
+	if(left) {
+		birdText.loadFromFile("Imgs/bird2.png");
 		bird.setPosition(0 - bird.getGlobalBounds().width, yPosition);
-	else
+	}
+	else {
+		birdText.loadFromFile("Imgs/bird1.png");
 		bird.setPosition(xSize, yPosition);
+	}
+
+	bird.setTexture(birdText);
 }
 
 void Bird::move(int speed) {

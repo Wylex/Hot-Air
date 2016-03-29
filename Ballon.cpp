@@ -14,15 +14,15 @@ Ballon::Ballon(int x, int y): xSize(x), ySize(y) {
 }
 
 void Ballon::horiAcceleration(bool increase) {
-	if(xAccChrono.getElapsedTime().asMilliseconds() > 40) {
+	if(xAccChrono.getElapsedTime().asMilliseconds() > 35) {
 		if(increase and xAcceleration < 50)
 			if(xAcceleration == 0)
-				xAcceleration = 6;
+				xAcceleration = 8;
 			else
 				xAcceleration += 2;
 		else if(xAcceleration > -50)
 			if(xAcceleration == 0)
-				xAcceleration = -6;
+				xAcceleration = -8;
 			else
 				xAcceleration -= 2;
 		xAccChrono.restart();
@@ -30,15 +30,15 @@ void Ballon::horiAcceleration(bool increase) {
 }
 
 void Ballon::vertAcceleration(bool increase) {
-	if(yAccChrono.getElapsedTime().asMilliseconds() > 40) {
+	if(yAccChrono.getElapsedTime().asMilliseconds() > 35) {
 		if(increase and yAcceleration < 50)
 			if(yAcceleration == 0)
-				yAcceleration = 6;
+				yAcceleration = 8;
 			else
 				yAcceleration += 2;
 		else if(yAcceleration > -50)
 			if(yAcceleration == 0)
-				yAcceleration = -6;
+				yAcceleration = -8;
 			else
 				yAcceleration -= 2;
 		yAccChrono.restart();

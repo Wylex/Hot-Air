@@ -32,7 +32,7 @@ void World::start() {
 				birdSpawn(false);
 				birdDirections.push_back(left);
 			}
-			birdSpawnTime = (std::rand()%4)+3;
+			birdSpawnTime = (std::rand()%5)+1;
 			birdSpawnChrono.restart();
 		}
 		//Moving birds
@@ -71,7 +71,7 @@ bool World::birdRemove() {
 	if(birds.size() > 0) {
 		sf::FloatRect birdPos = birds[birds.size() -1]->getBounds();
 
-		if(birdPos.left + birdPos.width < -1 or birdPos.left > (xSize +1)) {
+		if(birdPos.left + birdPos.width < 0 or birdPos.left > xSize) {
 			delete birds[birds.size() -1];
 			birds.pop_back();
 			removed = true;
