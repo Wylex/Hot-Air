@@ -14,29 +14,35 @@ Ballon::Ballon(int x, int y): xSize(x), ySize(y) {
 }
 
 void Ballon::horiAcceleration(bool increase) {
-	if(increase and xAcceleration < 50)
-		if(xAcceleration == 0)
-			xAcceleration = 9;
-		else
-			xAcceleration += 3;
-	else if(xAcceleration > -50)
-		if(xAcceleration == 0)
-			xAcceleration = -9;
-		else
-			xAcceleration -= 3;
+	if(xAccChrono.getElapsedTime().asMilliseconds() > 40) {
+		if(increase and xAcceleration < 50)
+			if(xAcceleration == 0)
+				xAcceleration = 6;
+			else
+				xAcceleration += 2;
+		else if(xAcceleration > -50)
+			if(xAcceleration == 0)
+				xAcceleration = -6;
+			else
+				xAcceleration -= 2;
+		xAccChrono.restart();
+	}
 }
 
 void Ballon::vertAcceleration(bool increase) {
-	if(increase and yAcceleration < 50)
-		if(yAcceleration == 0)
-			yAcceleration = 9;
-		else
-			yAcceleration += 3;
-	else if(yAcceleration > -50)
-		if(yAcceleration == 0)
-			yAcceleration = -9;
-		else
-			yAcceleration -= 3;
+	if(yAccChrono.getElapsedTime().asMilliseconds() > 40) {
+		if(increase and yAcceleration < 50)
+			if(yAcceleration == 0)
+				yAcceleration = 6;
+			else
+				yAcceleration += 2;
+		else if(yAcceleration > -50)
+			if(yAcceleration == 0)
+				yAcceleration = -6;
+			else
+				yAcceleration -= 2;
+		yAccChrono.restart();
+	}
 }
 
 void Ballon::update() {
@@ -46,15 +52,15 @@ void Ballon::update() {
 
 		int xAcc, yAcc;
 		if(xAcceleration > 0)
-			xAcc = 3;
+			xAcc = 2;
 		else
-			xAcc = -3;
+			xAcc = -2;
 		if(yAcceleration > 0)
-			yAcc = 3;
+			yAcc = 2;
 		else
-			yAcc = -3;
+			yAcc = -2;
 
-		for(int i(0); i < std::abs(xAcceleration)/3; i++) {
+		for(int i(0); i < std::abs(xAcceleration)/2; i++) {
 			ballon.move(xAcc/10.0, 0);
 			//Comprobar si no se ha salido de la imagen
 			if(ballon.getGlobalBounds().left -5 < 0 or ballon.getGlobalBounds().left + ballon.getGlobalBounds().width + 5 > xSize) {
@@ -80,25 +86,25 @@ void Ballon::update() {
 			slowDownClock.restart();
 
 			if(xAcceleration > 0)
-				xAcceleration -= 3;
+				xAcceleration -= 2;
 			else if(xAcceleration < 0)
-				xAcceleration += 3;
+				xAcceleration += 2;
 		}
 		if(!yMovement) {
 			slowDownClock.restart();
 
 			if(yAcceleration > 0)
-				yAcceleration -= 3;
+				yAcceleration -= 2;
 			else if(yAcceleration < 0)
-				yAcceleration += 3;
+				yAcceleration += 2;
 		}
 	}
 
+	//Reflejo del globo
 	ballonReflec.setPosition(ballon.getPosition().x, ((ySize/2) + 40) + ((ySize/2) + 40) - (ballon.getGlobalBounds().top + ballon.getLocalBounds().height));
 	sf::Color ballonRefColor = ballonReflec.getColor();
 	ballonRefColor.a = 210 - (ballonReflec.getGlobalBounds().top - ((ySize/2) + 40));
 	ballonReflec.setColor(ballonRefColor);
-
 }
 
 void Ballon::isMoving(bool mvm, bool x) {

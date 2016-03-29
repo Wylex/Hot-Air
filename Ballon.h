@@ -17,8 +17,12 @@ class Ballon: public sf::Drawable {
 		int yAcceleration;
 		bool xMovement = false;
 		bool yMovement = false;
+
 		sf::Clock updateClock;
 		sf::Clock slowDownClock;
+
+		sf::Clock xAccChrono;
+		sf::Clock yAccChrono;
 
 	public:
 		Ballon(int xSize, int ySize);

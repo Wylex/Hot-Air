@@ -19,9 +19,12 @@ class World {
 		Ballon ballon;
 		std::vector<Bird*> birds;
 
+		enum Direction {left, right};
+
 	private:
-		void birdSpawn();
+		void birdSpawn(bool left);
 		bool birdRemove();
+		void userInput();
 
 	public:
 		World();

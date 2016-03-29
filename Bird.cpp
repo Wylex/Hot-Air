@@ -13,7 +13,7 @@ Bird::Bird(int xSize, int ySize, bool left) {
 	if(left)
 		bird.setPosition(0 - bird.getGlobalBounds().width, yPosition);
 	else
-		bird.setPosition(xSize + bird.getGlobalBounds().width, yPosition);
+		bird.setPosition(xSize, yPosition);
 }
 
 void Bird::move(int speed) {
