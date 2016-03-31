@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include "World.h"
 
-World::World(): window(sf::VideoMode(xSize, ySize), "Hot Air"), ballon(xSize, ySize) {
+World::World(): window(sf::VideoMode(xSize, ySize), "Hot Air"), ballon(xSize, ySize), fps("Imgs/Font.ttf") {
 	backgroundTexture.loadFromFile("Imgs/background.png");
 	background.setTexture(backgroundTexture);
 
@@ -17,8 +17,10 @@ void World::start() {
 
 	sf::Clock birdSpawnChrono;
 	sf::Clock birdMoveChrono;
-	int birdSpawnTime = (std::rand()%4)+3;
+	int birdSpawnTime = (std::rand()%3)+2;
 	std::vector<Direction> birdDirections;
+
+	sf::Clock scoreChrono;
 
 	while (window.isOpen()) {
 
@@ -32,7 +34,7 @@ void World::start() {
 				birdSpawn(false);
 				birdDirections.push_back(left);
 			}
-			birdSpawnTime = (std::rand()%5)+1;
+			birdSpawnTime = (std::rand()%3)+1;
 			birdSpawnChrono.restart();
 		}
 		//Moving birds
@@ -47,22 +49,31 @@ void World::start() {
 		}
 		birdRemove();
 
-		userInput();
+		//Score up
+		if(scoreChrono.getElapsedTime().asSeconds() > 1) {
+			scoreChrono.restart();
+			score.addOne();
+		}
+
+		inGameUserInput();
 
 		ballon.update();
+		fps.update();
 
 		window.clear();
 		window.draw(background);
+		window.draw(score);
 		for(int i(0); i < birds.size(); i++)
 			window.draw(*birds[i]);
 		window.draw(ballon);
+		window.draw(fps);
 		window.display();
 	}
 
 }
 
 void World::birdSpawn(bool left) {
-	birds.push_back(std::move(new Bird(xSize, ySize/2 + 40, left)));
+	birds.push_back(std::move(new Bird(xSize, ySize/2 + 15, left)));
 }
 
 bool World::birdRemove() {
@@ -81,7 +92,7 @@ bool World::birdRemove() {
 	return removed;
 }
 
-void World::userInput() {
+void World::inGameUserInput() {
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
@@ -91,34 +102,34 @@ void World::userInput() {
 			//Key pressed
 			if(event.type == sf::Event::KeyPressed) {
 				if(event.key.code == sf::Keyboard::Left)
-					ballon.isMoving(true, true);
+					ballon.isXMoving(true);
 				if(event.key.code == sf::Keyboard::Right)
-					ballon.isMoving(true, true);
+					ballon.isXMoving(true);
 				if(event.key.code == sf::Keyboard::Up)
-					ballon.isMoving(true, false);
+					ballon.isYMoving(true);
 				if(event.key.code == sf::Keyboard::Down)
-					ballon.isMoving(true, false);
+					ballon.isYMoving(true);
 			}
 			//Key released
 			if(event.type == sf::Event::KeyReleased) {
 				if(event.key.code == sf::Keyboard::Left)
-					ballon.isMoving(false, true);
+					ballon.isXMoving(false);
 				if(event.key.code == sf::Keyboard::Right)
-					ballon.isMoving(false, true);
+					ballon.isXMoving(false);
 				if(event.key.code == sf::Keyboard::Up)
-					ballon.isMoving(false, false);
+					ballon.isYMoving(false);
 				if(event.key.code == sf::Keyboard::Down)
-					ballon.isMoving(false, false);
+					ballon.isYMoving(false);
 			}
 		}
 
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			ballon.horiAcceleration(false);
+			ballon.xAccelerate(false);
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			ballon.horiAcceleration(true);
+			ballon.xAccelerate(true);
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			ballon.vertAcceleration(false);
+			ballon.yAccelerate(false);
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			ballon.vertAcceleration(true);
+			ballon.yAccelerate(true);
 
 }

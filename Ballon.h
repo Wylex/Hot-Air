@@ -5,8 +5,9 @@
 
 class Ballon: public sf::Drawable {
 	private:
-		const int xSize;
-		const int ySize;
+		const int xWindowSize;
+		const int yWindowSize;
+		const int accelerationStep = 3;
 
 		sf::Texture ballonTexture;
 		sf::Sprite ballon;
@@ -27,11 +28,12 @@ class Ballon: public sf::Drawable {
 	public:
 		Ballon(int xSize, int ySize);
 
-		void horiAcceleration(bool increase);
-		void vertAcceleration(bool increase);
+		void xAccelerate(bool increase);
+		void yAccelerate(bool increase);
+		void isXMoving(bool mvm);
+		void isYMoving(bool mvm);
 
 		void update();
-		void isMoving(bool mvm, bool x);
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 

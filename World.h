@@ -6,6 +6,8 @@
 
 #include "Bird.h"
 #include "Ballon.h"
+#include "FPS.h"
+#include "Score.h"
 
 class World {
 	private:
@@ -20,11 +22,13 @@ class World {
 		std::vector<Bird*> birds;
 
 		enum Direction {left, right};
+		FPS fps;
+		Score score;
 
 	private:
 		void birdSpawn(bool left);
 		bool birdRemove();
-		void userInput();
+		void inGameUserInput();
 
 	public:
 		World();

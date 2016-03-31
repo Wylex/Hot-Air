@@ -1,7 +1,7 @@
 #include "Ballon.h"
 #include <cmath>
 
-Ballon::Ballon(int x, int y): xSize(x), ySize(y) {
+Ballon::Ballon(int x, int y): xWindowSize(x), yWindowSize(y) {
 	ballonTexture.loadFromFile("Imgs/ballon.png");
 	ballon.setTexture(ballonTexture);
 	ballonTextureReflec.loadFromFile("Imgs/ballon_reflec.png");
@@ -10,37 +10,37 @@ Ballon::Ballon(int x, int y): xSize(x), ySize(y) {
 	xAcceleration = 0;
 	yAcceleration = 0;
 
-	ballon.setPosition(xSize/2 - ballon.getLocalBounds().width/2, 100);
+	ballon.setPosition(xWindowSize/2 - ballon.getLocalBounds().width/2, 100);
 }
 
-void Ballon::horiAcceleration(bool increase) {
-	if(xAccChrono.getElapsedTime().asMilliseconds() > 35) {
+void Ballon::xAccelerate(bool increase) {
+	if(xAccChrono.getElapsedTime().asMilliseconds() > 45) {
 		if(increase and xAcceleration < 50)
 			if(xAcceleration == 0)
-				xAcceleration = 8;
+				xAcceleration = accelerationStep*3;
 			else
-				xAcceleration += 2;
+				xAcceleration += accelerationStep;
 		else if(xAcceleration > -50)
 			if(xAcceleration == 0)
-				xAcceleration = -8;
+				xAcceleration = -accelerationStep*3;
 			else
-				xAcceleration -= 2;
+				xAcceleration -= accelerationStep;
 		xAccChrono.restart();
 	}
 }
 
-void Ballon::vertAcceleration(bool increase) {
-	if(yAccChrono.getElapsedTime().asMilliseconds() > 35) {
+void Ballon::yAccelerate(bool increase) {
+	if(yAccChrono.getElapsedTime().asMilliseconds() > 45) {
 		if(increase and yAcceleration < 50)
 			if(yAcceleration == 0)
-				yAcceleration = 8;
+				yAcceleration = accelerationStep*3;
 			else
-				yAcceleration += 2;
+				yAcceleration += accelerationStep;
 		else if(yAcceleration > -50)
 			if(yAcceleration == 0)
-				yAcceleration = -8;
+				yAcceleration = -accelerationStep*3;
 			else
-				yAcceleration -= 2;
+				yAcceleration -= accelerationStep;
 		yAccChrono.restart();
 	}
 }
@@ -52,25 +52,25 @@ void Ballon::update() {
 
 		int xAcc, yAcc;
 		if(xAcceleration > 0)
-			xAcc = 2;
+			xAcc = accelerationStep;
 		else
-			xAcc = -2;
+			xAcc = -accelerationStep;
 		if(yAcceleration > 0)
-			yAcc = 2;
+			yAcc = accelerationStep;
 		else
-			yAcc = -2;
+			yAcc = -accelerationStep;
 
-		for(int i(0); i < std::abs(xAcceleration)/2; i++) {
+		for(int i(0); i < std::abs(xAcceleration)/accelerationStep; i++) {
 			ballon.move(xAcc/10.0, 0);
 			//Comprobar si no se ha salido de la imagen
-			if(ballon.getGlobalBounds().left -5 < 0 or ballon.getGlobalBounds().left + ballon.getGlobalBounds().width + 5 > xSize) {
+			if(ballon.getGlobalBounds().left -5 < 0 or ballon.getGlobalBounds().left + ballon.getGlobalBounds().width + 5 > xWindowSize) {
 				ballon.move(-xAcc/10.0, 0);
 				xAcceleration = 0;
 			}
 		}
-		for(int i(0); i < std::abs(yAcceleration)/3; i++) {
+		for(int i(0); i < std::abs(yAcceleration)/accelerationStep; i++) {
 			ballon.move(0, yAcc/10.0);
-			if(ballon.getGlobalBounds().top -5 < 0 or ballon.getGlobalBounds().top + ballon.getGlobalBounds().height + 5 > (ySize/2) + 40) {
+			if(ballon.getGlobalBounds().top -5 < 0 or ballon.getGlobalBounds().top + ballon.getGlobalBounds().height + 5 > (yWindowSize/2) + 40) {
 				ballon.move(0, -yAcc/10.0);
 				yAcceleration = 0;
 			}
@@ -86,31 +86,32 @@ void Ballon::update() {
 			slowDownClock.restart();
 
 			if(xAcceleration > 0)
-				xAcceleration -= 2;
+				xAcceleration -= accelerationStep;
 			else if(xAcceleration < 0)
-				xAcceleration += 2;
+				xAcceleration += accelerationStep;
 		}
 		if(!yMovement) {
 			slowDownClock.restart();
 
 			if(yAcceleration > 0)
-				yAcceleration -= 2;
+				yAcceleration -= accelerationStep;
 			else if(yAcceleration < 0)
-				yAcceleration += 2;
+				yAcceleration += accelerationStep;
 		}
 	}
 
 	//Reflejo del globo
-	ballonReflec.setPosition(ballon.getPosition().x, ((ySize/2) + 40) + ((ySize/2) + 40) - (ballon.getGlobalBounds().top + ballon.getLocalBounds().height));
+	ballonReflec.setPosition(ballon.getPosition().x, ((yWindowSize/2) + 40) + ((yWindowSize/2) + 40) - (ballon.getGlobalBounds().top + ballon.getLocalBounds().height));
 	sf::Color ballonRefColor = ballonReflec.getColor();
-	ballonRefColor.a = 210 - (ballonReflec.getGlobalBounds().top - ((ySize/2) + 40));
+	ballonRefColor.a = 210 - (ballonReflec.getGlobalBounds().top - ((yWindowSize/2) + 40));
 	ballonReflec.setColor(ballonRefColor);
 }
 
-void Ballon::isMoving(bool mvm, bool x) {
-	if(x)
+void Ballon::isXMoving(bool mvm) {
 		xMovement = mvm;
-	else
+}
+
+void Ballon::isYMoving(bool mvm) {
 		yMovement = mvm;
 }
 
