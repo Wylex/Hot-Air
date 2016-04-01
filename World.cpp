@@ -2,8 +2,8 @@
 #include <cstdlib>
 #include "World.h"
 
-World::World(): window(sf::VideoMode(xSize, ySize), "Hot Air"), ballon(xSize, ySize), fps("Imgs/Font.ttf") {
-	backgroundTexture.loadFromFile("Imgs/background.png");
+World::World(): window(sf::VideoMode(xSize, ySize), "Hot Air"), ballon(xSize, ySize), fps("Resources/Font.ttf"), score(305, 178), gameOn(false) {
+	backgroundTexture.loadFromFile("Resources/background.png");
 	background.setTexture(backgroundTexture);
 
 }
@@ -18,41 +18,50 @@ void World::start() {
 	sf::Clock birdSpawnChrono;
 	sf::Clock birdMoveChrono;
 	int birdSpawnTime = (std::rand()%3)+2;
-	std::vector<Direction> birdDirections;
 
 	sf::Clock scoreChrono;
 
 	while (window.isOpen()) {
 
-		//Spawning birds
-		if(birdSpawnChrono.getElapsedTime().asSeconds() > birdSpawnTime) {
-			if(std::rand()%2) {
-				birdSpawn(true);
-				birdDirections.push_back(right);
+		if(gameOn) {
+			//Spawning birds
+			if(birdSpawnChrono.getElapsedTime().asSeconds() > birdSpawnTime) {
+				if(std::rand()%2) {
+					birdSpawn(true);
+					birdDirections.push_back(right);
+				}
+				else {
+					birdSpawn(false);
+					birdDirections.push_back(left);
+				}
+				birdSpawnTime = (std::rand()%3)+1;
+				birdSpawnChrono.restart();
 			}
-			else {
-				birdSpawn(false);
-				birdDirections.push_back(left);
+			//Moving birds
+			if(birdMoveChrono.getElapsedTime().asMilliseconds()	> 20) {
+				for(int i(0); i < birds.size(); i++) {
+					if(birdDirections[i] == left)
+						birds[i]->move(-3);
+					else
+						birds[i]->move(3);
+				}
+				birdMoveChrono.restart();
 			}
-			birdSpawnTime = (std::rand()%3)+1;
-			birdSpawnChrono.restart();
-		}
-		//Moving birds
-		if(birdMoveChrono.getElapsedTime().asMilliseconds()	> 20) {
-			for(int i(0); i < birds.size(); i++) {
-				if(birdDirections[i] == left)
-					birds[i]->move(-3);
-				else
-					birds[i]->move(3);
-			}
-			birdMoveChrono.restart();
-		}
-		birdRemove();
+			birdRemove();
 
-		//Score up
-		if(scoreChrono.getElapsedTime().asSeconds() > 1) {
-			scoreChrono.restart();
-			score.addOne();
+			//Score up
+			if(scoreChrono.getElapsedTime().asSeconds() > 1) {
+				scoreChrono.restart();
+				score.addOne();
+			}
+		}
+
+		//Check collisions
+		for(int i(0); i < birds.size(); i++) {
+			if(checkCollisions(birds[i]->getBounds(), ballon.getBounds())) {
+				restart();
+				gameOn = false;
+			}
 		}
 
 		inGameUserInput();
@@ -70,6 +79,13 @@ void World::start() {
 		window.display();
 	}
 
+}
+
+void World::restart() {
+	score.reset();
+	birds.clear();
+	birdDirections.clear();
+	ballon.resetPos();
 }
 
 void World::birdSpawn(bool left) {
@@ -92,6 +108,13 @@ bool World::birdRemove() {
 	return removed;
 }
 
+bool World::checkCollisions(sf::FloatRect entity1, sf::FloatRect entity2) const {
+	if(entity1.intersects(entity2))
+		return true;
+
+	return false;
+}
+
 void World::inGameUserInput() {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -109,6 +132,8 @@ void World::inGameUserInput() {
 					ballon.isYMoving(true);
 				if(event.key.code == sf::Keyboard::Down)
 					ballon.isYMoving(true);
+
+				gameOn = true;
 			}
 			//Key released
 			if(event.type == sf::Event::KeyReleased) {
@@ -131,5 +156,4 @@ void World::inGameUserInput() {
 			ballon.yAccelerate(false);
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			ballon.yAccelerate(true);
-
 }

@@ -17,11 +17,13 @@ class World {
 		sf::RenderWindow window;
 		sf::Texture backgroundTexture;
 		sf::Sprite background;
+		bool gameOn;
 
 		Ballon ballon;
 		std::vector<Bird*> birds;
-
 		enum Direction {left, right};
+		std::vector<Direction> birdDirections;
+
 		FPS fps;
 		Score score;
 
@@ -29,6 +31,8 @@ class World {
 		void birdSpawn(bool left);
 		bool birdRemove();
 		void inGameUserInput();
+		bool checkCollisions(sf::FloatRect entity1, sf::FloatRect entity2) const;
+		void restart();
 
 	public:
 		World();

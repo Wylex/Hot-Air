@@ -32,6 +32,8 @@ class Ballon: public sf::Drawable {
 		void yAccelerate(bool increase);
 		void isXMoving(bool mvm);
 		void isYMoving(bool mvm);
+		void resetPos();
+		sf::FloatRect getBounds() const;
 
 		void update();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

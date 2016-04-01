@@ -2,9 +2,9 @@
 #include <cmath>
 
 Ballon::Ballon(int x, int y): xWindowSize(x), yWindowSize(y) {
-	ballonTexture.loadFromFile("Imgs/ballon.png");
+	ballonTexture.loadFromFile("Resources/ballon.png");
 	ballon.setTexture(ballonTexture);
-	ballonTextureReflec.loadFromFile("Imgs/ballon_reflec.png");
+	ballonTextureReflec.loadFromFile("Resources/ballon_reflec.png");
 	ballonReflec.setTexture(ballonTextureReflec);
 
 	xAcceleration = 0;
@@ -118,4 +118,14 @@ void Ballon::isYMoving(bool mvm) {
 void Ballon::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(ballon, states);
 	target.draw(ballonReflec, states);
+}
+
+void Ballon::resetPos() {
+	ballon.setPosition(xWindowSize/2 - ballon.getLocalBounds().width/2, 100);
+	xAcceleration = 0;
+	yAcceleration = 0;
+}
+
+sf::FloatRect Ballon::getBounds() const {
+	return ballon.getGlobalBounds();
 }

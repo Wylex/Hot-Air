@@ -1,9 +1,9 @@
 #include "Score.h"
 #include <string>
 
-Score::Score() {
+Score::Score(int x, int y) {
 	for(int i(0); i < 10; i++) {
-		std::string file = "Imgs/";
+		std::string file = "Resources/";
 		file += std::to_string(i);
 		file += ".png";
 
@@ -11,8 +11,8 @@ Score::Score() {
 		nums[i].setTexture(numsTextures[i]);
 	}
 
-	nums[0].setPosition(310,175);
-
+	xPos = x;
+	yPos = y;
 	score = 0;
 }
 
@@ -35,27 +35,35 @@ int Score::getDigits(int num) const {
 	return digits;
 }
 
-int Score::setFirstDigitsPos(int num, int xPos) {
-	int yPos(178);
+int Score::setFirstDigitsPos(int num, int x) {
 	int digits = getDigits(num);
 
 	int a = 1;
 	for(int b(1); b < digits; b++)
 		a*= 10;
 
-	nums[num/a].setPosition(xPos, yPos);
+	nums[num/a].setPosition(x, yPos);
 
 	return a;
 }
 
+int Score::getScore() const {
+	return score;
+}
+
+void Score::saveScore(std::string filePath) const {
+	std::ofstream file(filePath);
+	file << score;
+}
+
 void Score::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	int temp = score;
-	int xPos(305);
+	int x(xPos);
 	for(int i(0); i < getDigits(score); i++) {
-		int a = const_cast<Score*>(this)->setFirstDigitsPos(temp, xPos);
+		int a = const_cast<Score*>(this)->setFirstDigitsPos(temp, x);
 		target.draw(nums[temp/a], states);
 
 		temp %= a;
-		xPos += 11;
+		x+= 12;
 	}
 }

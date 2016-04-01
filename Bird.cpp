@@ -9,11 +9,11 @@ Bird::Bird(int xSize, int ySize, bool left) {
 	int yPosition = std::rand()%int(ySize - bird.getGlobalBounds().height);
 
 	if(left) {
-		birdText.loadFromFile("Imgs/bird2B.png");
+		birdText.loadFromFile("Resources/bird2B.png");
 		bird.setPosition(0 - bird.getGlobalBounds().width, yPosition);
 	}
 	else {
-		birdText.loadFromFile("Imgs/bird1B.png");
+		birdText.loadFromFile("Resources/bird1B.png");
 		bird.setPosition(xSize, yPosition);
 	}
 
