@@ -1,11 +1,17 @@
 #include <ctime>
 #include <cstdlib>
+#include <fstream>
+#include <string>
 #include "World.h"
 
-World::World(): window(sf::VideoMode(xSize, ySize), "Hot Air"), ballon(xSize, ySize), fps("Resources/Font.ttf"), score(305, 178), gameOn(false) {
+World::World(): window(sf::VideoMode(xSize, ySize), "Hot Air"), ballon(xSize, ySize), fps("Resources/Font.ttf"), score(305, 178), maxScore(160, 130), paused(true) {
 	backgroundTexture.loadFromFile("Resources/background.png");
 	background.setTexture(backgroundTexture);
 
+	for(int i(maxScore.getScore()); i < getMaxScore(); i++)
+		maxScore.addOne();
+
+	std::srand(time(NULL));
 }
 
 World::~World() {
@@ -13,8 +19,6 @@ World::~World() {
 }
 
 void World::start() {
-	std::srand(time(NULL));
-
 	sf::Clock birdSpawnChrono;
 	sf::Clock birdMoveChrono;
 	int birdSpawnTime = (std::rand()%3)+2;
@@ -23,7 +27,7 @@ void World::start() {
 
 	while (window.isOpen()) {
 
-		if(gameOn) {
+		if(!paused) {
 			//Spawning birds
 			if(birdSpawnChrono.getElapsedTime().asSeconds() > birdSpawnTime) {
 				if(std::rand()%2) {
@@ -60,7 +64,7 @@ void World::start() {
 		for(int i(0); i < birds.size(); i++) {
 			if(checkCollisions(birds[i]->getBounds(), ballon.getBounds())) {
 				restart();
-				gameOn = false;
+				paused = true;
 			}
 		}
 
@@ -72,6 +76,7 @@ void World::start() {
 		window.clear();
 		window.draw(background);
 		window.draw(score);
+		window.draw(maxScore);
 		for(int i(0); i < birds.size(); i++)
 			window.draw(*birds[i]);
 		window.draw(ballon);
@@ -79,9 +84,33 @@ void World::start() {
 		window.display();
 	}
 
+	//Save maxScore
+	std::ofstream scoreFile(".score.txt");
+	if(maxScore.getScore() > getMaxScore())
+		scoreFile << std::to_string(maxScore.getScore());
+
+}
+
+int World::getMaxScore() const {
+	int maxS = 0;
+	std::ifstream scoreFile(".score.txt");
+	if(scoreFile.good()) {
+		std::string maxScore;
+		scoreFile >> maxScore;
+
+		if(maxScore != "")
+			maxS = std::stoi(maxScore);
+	}
+
+	return maxS;
 }
 
 void World::restart() {
+	if(maxScore.getScore() < score.getScore()) {
+		for(int i(maxScore.getScore()); i < score.getScore(); i++)
+			maxScore.addOne();
+	}
+
 	score.reset();
 	birds.clear();
 	birdDirections.clear();
@@ -133,7 +162,7 @@ void World::inGameUserInput() {
 				if(event.key.code == sf::Keyboard::Down)
 					ballon.isYMoving(true);
 
-				gameOn = true;
+				paused = false;
 			}
 			//Key released
 			if(event.type == sf::Event::KeyReleased) {

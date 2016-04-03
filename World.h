@@ -17,7 +17,7 @@ class World {
 		sf::RenderWindow window;
 		sf::Texture backgroundTexture;
 		sf::Sprite background;
-		bool gameOn;
+		bool paused;
 
 		Ballon ballon;
 		std::vector<Bird*> birds;
@@ -26,6 +26,7 @@ class World {
 
 		FPS fps;
 		Score score;
+		Score maxScore;
 
 	private:
 		void birdSpawn(bool left);
@@ -33,6 +34,7 @@ class World {
 		void inGameUserInput();
 		bool checkCollisions(sf::FloatRect entity1, sf::FloatRect entity2) const;
 		void restart();
+		int getMaxScore() const;
 
 	public:
 		World();
