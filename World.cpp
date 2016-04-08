@@ -5,6 +5,10 @@
 #include "World.h"
 
 World::World(): window(sf::VideoMode(xSize, ySize), "Hot Air"), ballon(xSize, ySize), fps("Resources/Font.ttf"), score(305, 178), maxScore(160, 130), paused(true) {
+	music.setVolume(40);
+	music.openFromFile("Resources/ms.ogg");
+	music.setLoop(true);
+
 	backgroundTexture.loadFromFile("Resources/background.png");
 	background.setTexture(backgroundTexture);
 
@@ -19,9 +23,11 @@ World::~World() {
 }
 
 void World::start() {
+	music.play();
+
 	sf::Clock birdSpawnChrono;
 	sf::Clock birdMoveChrono;
-	int birdSpawnTime = (std::rand()%3)+2;
+	int birdSpawnTime = (std::rand()%3)+1;
 
 	sf::Clock scoreChrono;
 
@@ -45,9 +51,9 @@ void World::start() {
 			if(birdMoveChrono.getElapsedTime().asMilliseconds()	> 20) {
 				for(int i(0); i < birds.size(); i++) {
 					if(birdDirections[i] == left)
-						birds[i]->move(-3);
+						birds[i]->move(-4);
 					else
-						birds[i]->move(3);
+						birds[i]->move(4);
 				}
 				birdMoveChrono.restart();
 			}

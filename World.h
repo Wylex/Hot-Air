@@ -2,6 +2,7 @@
 #define WORLD_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
 
 #include "Bird.h"
@@ -27,6 +28,8 @@ class World {
 		FPS fps;
 		Score score;
 		Score maxScore;
+
+		sf::Music music;
 
 	private:
 		void birdSpawn(bool left);

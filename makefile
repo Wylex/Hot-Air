@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS= -lsfml-graphics -lsfml-window -lsfml-system
+CFLAGS= -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 OBJECTS = .main.o .World.o .Ballon.o .Bird.o .Score.o .FPS.o
 
