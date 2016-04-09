@@ -5,7 +5,7 @@
 #include "World.h"
 
 World::World(): window(sf::VideoMode(xSize, ySize), "Hot Air"), ballon(xSize, ySize), fps("Resources/Font.ttf"), score(305, 178), maxScore(160, 130), paused(true) {
-	music.setVolume(40);
+	music.setVolume(30);
 	music.openFromFile("Resources/ms.ogg");
 	music.setLoop(true);
 
@@ -35,7 +35,7 @@ void World::start() {
 
 		if(!paused) {
 			//Spawning birds
-			if(birdSpawnChrono.getElapsedTime().asSeconds() > birdSpawnTime) {
+			if(birdSpawnChrono.getElapsedTime().asSeconds() >= birdSpawnTime) {
 				if(std::rand()%2) {
 					birdSpawn(true);
 					birdDirections.push_back(right);
